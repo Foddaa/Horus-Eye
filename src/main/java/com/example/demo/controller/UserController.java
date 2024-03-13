@@ -23,8 +23,8 @@ public class UserController {
     }
 
     @PostMapping(value= "/upload", consumes = "multipart/form-data")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file,@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("role") String role) throws IOException {
-        User user = new User(email,firstName,lastName,password,role,"");
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file,@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("role") String role, @RequestParam("phoneNumber") String phoneNumber, @RequestParam("birthDate") String birthDate) throws IOException {
+        User user = new User(email,firstName,lastName,password,role,phoneNumber,birthDate,"");
         return userService.signUp(file,user);
 
     }
