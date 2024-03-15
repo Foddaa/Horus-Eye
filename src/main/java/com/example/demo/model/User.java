@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -30,7 +28,4 @@ public class User {
     String birthDate;
     @Column(name = "passport")
     private String passport;
-
-
-
 }

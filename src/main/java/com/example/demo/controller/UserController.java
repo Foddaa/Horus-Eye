@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -32,12 +31,8 @@ public class UserController {
     public ResponseEntity<String> login(@RequestParam("email") String email, @RequestParam("password") String password){
         return userService.login(email,password);
     }
-    @PostMapping("test")
-    public ResponseEntity<String> signUp(@RequestBody MultipartFile file,@RequestBody User user) throws IOException {
-        return ResponseEntity.ok("File uploaded successfully");
-    }
     @PutMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody User user){
+    public ResponseEntity<String> updateUser(@RequestBody User user) throws IOException {
         return userService.updateUser(user);
     }
     @PutMapping(value = "/uploadImage", consumes = "multipart/form-data")
