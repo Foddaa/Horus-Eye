@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.User;
+import com.example.demo.model.UserToken;
 import com.example.demo.service.UserService;
+import com.example.demo.service.UserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,17 +17,28 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService ;
+    @Autowired
+    UserTokenService userTokenService;
 
     @GetMapping("/all")
     public List<User> getAll(){
         return userService.getAllUsers();
     }
-
-    @PostMapping(value= "/upload", consumes = "multipart/form-data")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file,@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("role") String role, @RequestParam("phoneNumber") String phoneNumber, @RequestParam("birthDate") String birthDate) throws IOException {
-        User user = new User(email,firstName,lastName,password,role,phoneNumber,birthDate,"");
-        return userService.signUp(file,user);
-
+    @PostMapping("/newToken")
+    public void newToken(@RequestBody UserToken userToken){
+        userTokenService.createToken(userToken);
+    }
+    @GetMapping("/assignCode")
+    public ResponseEntity<String> assignCode(@RequestParam("email") String email, @RequestParam("code") String code){
+        return userTokenService.verify(email,code);
+    }
+    @PostMapping("/signUpInformation")
+    public ResponseEntity<String>signUpInformation(@RequestBody User user){
+        return userService.signUp(user);
+    }
+    @GetMapping("/check")
+    public boolean check(String email){
+        return userService.check(email);
     }
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam("email") String email, @RequestParam("password") String password){

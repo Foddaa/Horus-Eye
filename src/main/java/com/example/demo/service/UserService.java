@@ -1,10 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.model.User;
+//import com.example.demo.model.UserToken;
+import com.example.demo.model.UserToken;
 import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,18 +16,27 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
-    public Optional<User> getById(int id){
-        return userRepository.findById(id);
+    public Boolean check(String email){
+        if(getByEmail(email).isPresent()){
+            return true;
+        }
+        else return false;
     }
-    public void newUser(User user){
+    public Optional<User> getByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    public void saveUser(User user){
         userRepository.save(user);
     }
     public ResponseEntity<String> login(String email,String password){
@@ -36,17 +49,15 @@ public class UserService {
         }
         return ResponseEntity.ok("user not found");
     }
-    public ResponseEntity<String> signUp(MultipartFile file, User user) throws IOException {
+    public ResponseEntity<String> signUp( User user) {
         if(userRepository.findByEmail(user.getEmail()).isPresent()){
             return ResponseEntity.ok("user already exists");
         }
-        String directory = System.getProperty("user.dir")+"\\images\\";
-        String filePath = directory + user.getEmail()+".png";
-        file.transferTo(new File(filePath));
-        user.setPassport(filePath);
-        newUser(user);
+        user.setPassport("Still Empty");
+        saveUser(user);
         return ResponseEntity.ok("user created successfully");
     }
+
     public ResponseEntity<String> updateUser(User user){
         if (userRepository.findByEmail(user.getEmail()).isEmpty()){
             return ResponseEntity.ok("user not found");
