@@ -25,16 +25,28 @@ public class UserController {
         return userService.getAllUsers();
     }
     @PostMapping("/newToken")
-    public void newToken(@RequestBody UserToken userToken){
-        userTokenService.createToken(userToken);
+    public int newToken(@RequestBody UserToken userToken){
+        try {
+            if (userService.check(userToken.getEmail())) {
+                userTokenService.createToken(userToken);
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
-    @GetMapping("/assignCode")
-    public ResponseEntity<String> assignCode(@RequestParam("email") String email, @RequestParam("code") String code){
-        return userTokenService.verify(email,code);
+    @PostMapping("/confirmPassword")
+    public ResponseEntity<Boolean> confirmPassword(@RequestParam("email") String email, @RequestParam("password") String password){
+        UserToken userToken= userTokenService.confirmPassword(email);
+        return userService.confirmPassword(userToken,password);
     }
-    @PostMapping("/signUpInformation")
-    public ResponseEntity<String>signUpInformation(@RequestBody User user){
-        return userService.signUp(user);
+    @PostMapping("/assignCode")
+    public Boolean assignCode(@RequestParam("email") String email, @RequestParam("code") String code){
+        return userTokenService.checkCode(email,code);
     }
     @GetMapping("/check")
     public boolean check(String email){
@@ -47,10 +59,6 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody User user) throws IOException {
         return userService.updateUser(user);
-    }
-    @PutMapping(value = "/uploadImage", consumes = "multipart/form-data")
-    public ResponseEntity<String> updateUserImage(@RequestParam("file") MultipartFile file, @RequestParam("email") String email) throws IOException {
-        return userService.uploadImage(file,email);
     }
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestParam("email") String email){

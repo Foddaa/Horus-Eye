@@ -20,12 +20,12 @@ public class User {
     String lastName;
     @Column(name="password")
     String password;
-    @Column(name="role")
-    String role;
-    @Column(name="phoneNumber")
-    String phoneNumber;
     @Column(name="birthDate")
     String birthDate;
-    @Column(name = "passport")
-    private String passport;
+    @Column(name="country")
+    String country;
+    @Column(name="phoneNumber")
+    String phoneNumber;
+
+
 }

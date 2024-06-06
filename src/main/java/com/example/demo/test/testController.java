@@ -11,9 +11,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class testController {
     @Autowired
     LandMarkService landMarkService;
-    @GetMapping("/horusEye")
-    public String horusEye(@RequestParam("file") MultipartFile file){
 
-        return landMarkService.displayInfo(file);
-    }
 }

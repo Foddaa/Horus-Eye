@@ -4,6 +4,7 @@ import com.example.demo.model.User;
 import com.example.demo.model.UserToken;
 import com.example.demo.repository.UserTokenRepository;
 import jakarta.transaction.Transactional;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,6 +33,7 @@ public class UserTokenService {
         userTokenRepository.deleteAll(expiredEntities);
 
     }
+
     public String sendCode(String receiver){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("eyehorus458@gmail.com");
@@ -44,6 +46,7 @@ public class UserTokenService {
         javaMailSender.send(message);
         return code;
     }
+
     public void createToken(UserToken userToken){
         userToken.setCode(sendCode(userToken.getEmail()));
         userToken.setCreationTime(LocalDateTime.now());
@@ -60,15 +63,10 @@ public class UserTokenService {
     public void deleteToken(String email){
         userTokenRepository.deleteByEmail(email);
     }
-    @Transactional
-    public ResponseEntity<String> verify(String email,String code){
-        if (checkCode(email,code)){
-            UserToken userToken=userTokenRepository.findByEmail(email);
-            User user=new User(userToken.getEmail(),userToken.getFirstName(),userToken.getLastName(),userToken.getPassword(),userToken.getRole(),userToken.getPhoneNumber(),userToken.getBirthDate(),"");
-            userService.saveUser(user);
-            deleteToken(email);
-            return ResponseEntity.ok("you are verified");
-        }
-        return ResponseEntity.ok("code incorrect");
+
+    public UserToken confirmPassword(String email){
+        UserToken userToken=  userTokenRepository.findByEmail(email);
+        userTokenRepository.deleteByEmail(email);
+        return userToken;
     }
 }

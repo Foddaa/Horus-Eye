@@ -13,21 +13,20 @@ import java.time.LocalDateTime;
 @Table(name="userToken")
 public class UserToken {
     @Id
-    @Column(name="email")
+    @Column(name="email")     //email
     String email;
-    @Column(name="code")
+    @Column(name="code")      //verification code
     String code;
-    @Column(name="firstName")
+    @Column(name="firstName")   //first name
     String firstName;
-    @Column(name="lastName")
+    @Column(name="lastName")     //last name
     String lastName;
-    @Column(name="password")
-    String password;
-    @Column(name="role")
-    String role;
-    @Column(name="phoneNumber")
+    @Column(name="country")     //country
+    String country;
+    @Column(name="phoneNumber")    //phone number
     String phoneNumber;
-    @Column(name="birthDate")
+    @Column(name="birthDate")     //date of birth
     String birthDate;
+    @Column(name="creationTime")    //creation time
     private LocalDateTime creationTime;
 }
