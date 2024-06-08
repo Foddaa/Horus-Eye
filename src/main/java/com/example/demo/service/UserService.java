@@ -35,10 +35,6 @@ public class UserService {
         userRepository.save(user);
             return ResponseEntity.ok(true);
     }
-
-    public void saveUser(User user){
-        userRepository.save(user);
-    }
     public ResponseEntity<String> login(String email,String password){
         Optional<User> user =userRepository.findByEmail(email);
         if (user.isPresent() ){

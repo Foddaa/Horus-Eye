@@ -63,7 +63,6 @@ public class UserTokenService {
     public void deleteToken(String email){
         userTokenRepository.deleteByEmail(email);
     }
-
     public UserToken confirmPassword(String email){
         UserToken userToken=  userTokenRepository.findByEmail(email);
         userTokenRepository.deleteByEmail(email);
